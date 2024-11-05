@@ -162,3 +162,139 @@ SELECT
 FROM dual;
 
 
+SELECT
+    TO_CHAR(1234, '999999'), -- 9의 개수만큼 자리수
+    TO_CHAR(1234, '099999'), -- 빈자리 0으로
+    TO_CHAR(1234, '$99999'),
+    '$' || 1234,
+    TO_CHAR(1234, '999999.99'),
+    TO_CHAR(1234, '99,999')
+FROM dual;
+
+
+SELECT 
+    empno,
+    ename,
+    TO_CHAR(hiredate, 'YYYY-MM-DD') HIREDATE,
+    TO_CHAR(sal * 12 + comm, '$99,999') SAL,
+    TO_CHAR((sal * 12 + comm)* 1.15 , '$99,999') "15%인상"
+FROM emp
+WHERE comm IS NOT NULL;
+
+
+SELECT
+    TO_DATE('2024-06-02') + 3,
+    TO_DATE('2024/06/02') + 3,
+    TO_DATE('24/06/02') + 3,
+    TO_DATE('20240602') + 3,
+    LAST_DAY('2024-08-05'),
+    TO_DATE('24:06:02') + 3,
+    TO_CHAR(SYSDATE, 'YYYY/MM/DD'),
+    TO_DATE('2024-01-05', 'YYYY-MM-DD'),
+    TO_DATE('2024,01,05', 'YYYY,MM,DD'),
+    TO_DATE('12/10/20', 'MM/DD/YY') -- 12년 10월 20일 -> 12월 10일 20년도
+FROM dual;
+
+
+
+
+--NVL
+
+SELECT
+    sal,
+    comm,
+    sal * 12 + comm,     -- 숫자 * 12 + null
+    sal * 12 + NVL(comm, 0)
+FROM emp;
+
+
+SELECT
+    profno,
+    name,
+    pay,
+    bonus,
+    TO_CHAR( pay * 12 + NVL(bonus, 0), '999,999' ) TOTAL
+FROM professor
+WHERE deptno = 201;
+
+
+SELECT
+    NVL(null, 10),
+    NVL2(123, '있다', '없다'),
+    NVL2(null, '있다', '널이다')
+FROM dual;
+
+
+--2. 아래 화면과 같이 emp 테이블에서 deptno 가 30 번인 사원들을 조회하여 comm 값이 있을 경우 'Exist' 을 출력하고
+--   comm 값이 null 일 경우 'NULL' 을 출력하세요.
+SELECT
+    empno,
+    ename,
+    comm,
+    NVL2(comm, 'Exist', 'NULL') NVL2
+FROM emp
+WHERE deptno = 30;
+
+--sal*12 + comm = 총 연봉  NVL NVL2
+SELECT
+    empno,
+    ename,
+    comm,
+    sal*12 + comm TOTAL,
+    sal*12 + NVL(comm, 0) TOTAL2,
+    sal*12 + NVL2(comm, comm, 0) TOTAL3,
+    NVL2(comm, sal*12+comm, sal*12) TOTAL4
+FROM emp
+WHERE deptno = 30;
+
+--DECODE
+SELECT
+    DECODE(10, 10, '같다', '다르다'),
+    DECODE(10, 20, '같다', '다르다'),
+    DECODE(10, 20, '같다'), --- DECODE(10, 20, '같다', null)
+    DECODE(10, 30, '30이다', 40, '40이다', 50, '50이다', '아니다'),
+    DECODE(10, 30, '30이다', 40, '40이다', 50, '50이다', 60, '60이다', '아니다'),
+    DECODE(10, 30, '30이다', 40, '40이다', 50, '50이다', 60, '60이다',  null),
+    DECODE(10, 30, '30이다', 40, '40이다', 50, '50이다', 60, '60이다')
+FROM dual;
+
+SELECT
+    deptno,
+    name,
+    DECODE(deptno, 101, '컴퓨터공학', '다른학과'),
+    DECODE(deptno, 101, '컴퓨터공학'),
+    DECODE(deptno, 101, '컴퓨터공학', null)
+FROM professor;
+
+
+SELECT
+    deptno,
+    name,
+    DECODE(deptno, 101, '컴퓨터공학', 102, '멀티미디어', 103, '소프트웨어', 'ETC') DNAME
+FROM professor;
+
+
+
+--case
+--1 1학년 2 2학년 3 3학년 4 4학년
+select grade || '학년'
+from student;
+--1,2 저학년 3,4 고학년
+
+SELECT 
+    grade,
+    DECODE(grade, 1, '저학년', 2, '저학년', 3, '고학년', 4, '고학년') 구분,
+    CASE grade
+        WHEN 1 THEN '저학년'
+        WHEN 2 THEN '저학년'
+        WHEN 3 THEN '고학년'
+        WHEN 4 THEN '고학년'
+    END AS "학년구분",
+    CASE 
+        WHEN grade IN (1,2) THEN '저학년'
+        WHEN grade BETWEEN 3 AND 4 THEN '고학년'
+    END 학년구분
+FROM student;
+
+
+
