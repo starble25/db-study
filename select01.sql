@@ -106,17 +106,17 @@ SELECT ...
 FROM ...
 WHERE ...
 
-
+;
 select *
 from emp;  --comm 성과급
 
 select *
 from emp
-where comm = is null; -- 성과급을 받지 않는 사람들만
+where comm is null; -- 성과급을 받지 않는 사람들만
 
 select *
 from emp
-where comm = is not null; -- 성과급 지급 대상인 사람들만
+where comm is not null; -- 성과급 지급 대상인 사람들만
 
 select DISTINCT deptno from emp;
 
