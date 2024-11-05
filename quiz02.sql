@@ -7,7 +7,8 @@ SELECT
     name 이름,
     id 아이디
 FROM student
-WHERE height >= 160 AND height <= 175
+WHERE height BETWEEN 160 AND 175
+--WHERE height >= 160 AND height <= 175
 UNION ALL
 SELECT
     profno,
