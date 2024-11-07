@@ -106,3 +106,8 @@ WHERE p.profno = s.profno(+);
 --WHERE s.profno(+) = p.profno;
 
 
+select * from emp;
+
+SELECT e1.empno, e1.ename, e1.mgr, e2.empno, e2.ename
+FROM emp e1, emp e2
+WHERE e1.mgr = e2.empno;
